@@ -8,9 +8,9 @@ export const isAdmin = async (req: Request, res: Response, next: NextFunction) =
     //   @ts-ignore
     const userId = req?.user?.id;
 
-    const user = await prisma.user.findUnique({ where: { id: userId }, include: { role: true } });
+    const user = await prisma.user.findUnique({ where: { id: userId }});
 
-    if (user?.role?.name !== 'admin') {
+    if (user?.role!== 'ADMIN') {
         return res.status(403).json({ error: 'You do not have permission to perform this action' });
     }
 
@@ -23,9 +23,9 @@ export const isSelfOrAdmin = async (req: Request, res: Response, next: NextFunct
     const userId = req?.user?.id;
     const targetUserId = parseInt(req.params.id);
 
-    const user = await prisma.user.findUnique({ where: { id: userId }, include: { role: true } });
+    const user = await prisma.user.findUnique({ where: { id: userId } });
 
-    if (userId !== targetUserId && user?.role?.name !== 'admin') {
+    if (userId !== targetUserId && user?.role!== 'ADMIN') {
         return res.status(403).json({ error: 'You do not have permission to access this resource' });
     }
 
